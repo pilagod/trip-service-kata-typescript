@@ -34,6 +34,22 @@ describe('TripService', () => {
 
       expect(trips).toHaveLength(0);
     });
+
+    it('should return trips when logged user is friend of given user', () => {
+      const user = new User();
+
+      const loggedUser = new User();
+      user.addFriend(loggedUser);
+
+      const trips = [new Trip(), new Trip()];
+      trips.forEach(t => user.addTrip(t));
+
+      const service = createTripServiceWithLoggedUser(loggedUser);
+
+      const gotTrips = service.getTripsByUser(user);
+
+      expect(gotTrips).toEqual(trips);
+    });
   });
 });
 
@@ -47,5 +63,10 @@ class TripServiceUnderTest extends TripService {
 
   protected getLoggedUser(): Nullable<User> {
     return this.user;
+  }
+
+  // expect there is a method called findTripsByUser on TripService that can be overridden
+  protected findTripsByUser(user: User): Trip[] {
+    return user.getTrips();
   }
 }
