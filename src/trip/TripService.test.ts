@@ -6,10 +6,16 @@ import User from '@user/User';
 
 describe('TripService', () => {
 
+  function createTripServiceWithLoggedUser(user: Nullable<User>): TripService {
+    const service = new TripServiceUnderTest();
+    service.givenLoggedUser(user);
+    return service;
+  }
+
   describe('getTripsByUser', () => {
+
     it('should throw UserNotLoggedInError when use is not logged in', () => {
-      const service = new TripServiceUnderTest();
-      service.givenLoggedUser(null);
+      const service = createTripServiceWithLoggedUser(null);
 
       const getTripsByUser = () => service.getTripsByUser(new User());
 
@@ -22,8 +28,7 @@ describe('TripService', () => {
 
       const loggedUser = new User();
 
-      const service = new TripServiceUnderTest();
-      service.givenLoggedUser(loggedUser);
+      const service = createTripServiceWithLoggedUser(loggedUser);
 
       const trips = service.getTripsByUser(user);
 
