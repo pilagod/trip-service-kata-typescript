@@ -56,7 +56,6 @@ describe('TripService', () => {
       const logger = new MockLogger();
 
       const service = createTripServiceWithLoggedUser(new User());
-      // setLogger is not yet added to TripService, use test to define new spec
       service.setLogger(logger);
 
       service.getTripsByUser(new User());
