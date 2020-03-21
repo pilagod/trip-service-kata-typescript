@@ -13,14 +13,24 @@ describe('TripService', () => {
     return service;
   }
 
+  function createTripServiceWithoutLoggedUser(): TripService {
+    return createTripServiceWithLoggedUser(null);
+  }
+
   function createTripServiceWithRandomLoggedUser(): TripService {
     return createTripServiceWithLoggedUser(new User());
+  }
+
+  function createTripServiceWithLoggedUserBeingFriendOf(user: User): TripService {
+    const loggedUser = new User();
+    user.addFriend(loggedUser);
+    return createTripServiceWithLoggedUser(loggedUser);
   }
 
   describe('getTripsByUser', () => {
 
     it('should throw UserNotLoggedInError when use is not logged in', () => {
-      const service = createTripServiceWithLoggedUser(null);
+      const service = createTripServiceWithoutLoggedUser();
 
       const getTripsByUser = () => service.getTripsByUser(new User());
 
@@ -31,9 +41,7 @@ describe('TripService', () => {
       const user = new User();
       user.addTrip(new Trip());
 
-      const loggedUser = new User();
-
-      const service = createTripServiceWithLoggedUser(loggedUser);
+      const service = createTripServiceWithRandomLoggedUser();
 
       const trips = service.getTripsByUser(user);
 
@@ -42,14 +50,10 @@ describe('TripService', () => {
 
     it('should return trips when logged user is friend of given user', () => {
       const user = new User();
-
-      const loggedUser = new User();
-      user.addFriend(loggedUser);
-
       const trips = [new Trip(), new Trip()];
       trips.forEach(t => user.addTrip(t));
 
-      const service = createTripServiceWithLoggedUser(loggedUser);
+      const service = createTripServiceWithLoggedUserBeingFriendOf(user);
 
       const gotTrips = service.getTripsByUser(user);
 
@@ -58,10 +62,6 @@ describe('TripService', () => {
 
     it('should return trips ordered by popularity in decending order', () => {
       const user = new User();
-
-      const loggedUser = new User();
-      user.addFriend(loggedUser);
-
       const trips = [
         new Trip(1),
         new Trip(2),
@@ -69,7 +69,7 @@ describe('TripService', () => {
       ];
       trips.forEach(t => user.addTrip(t));
 
-      const service = createTripServiceWithLoggedUser(loggedUser);
+      const service = createTripServiceWithLoggedUserBeingFriendOf(user);
 
       const gotTrips = service.getTripsByUser(user);
 
