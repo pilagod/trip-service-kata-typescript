@@ -1,5 +1,6 @@
 import { Nullable } from '@type';
 import { UserNotLoggedInError } from '@error';
+import Logger from '@trip/Logger';
 import Trip from '@trip/Trip';
 import TripService from '@trip/TripService';
 import User from '@user/User';
@@ -50,6 +51,20 @@ describe('TripService', () => {
 
       expect(gotTrips).toEqual(trips);
     });
+
+    it('should log welcome message when getTripsByUser is called', () => {
+      const logger = new MockLogger();
+
+      const service = createTripServiceWithLoggedUser(new User());
+      // setLogger is not yet added to TripService, use test to define new spec
+      service.setLogger(logger);
+
+      service.getTripsByUser(new User());
+
+      const message = logger.getMessage().toLowerCase();
+
+      expect(message).toContain('welcome');
+    });
   });
 });
 
@@ -67,5 +82,17 @@ class TripServiceUnderTest extends TripService {
 
   protected findTripsByUser(user: User): Trip[] {
     return user.getTrips();
+  }
+}
+
+class MockLogger implements Logger {
+  private message: string = '';
+
+  public log(message: string): void {
+    this.message = message;
+  }
+
+  public getMessage(): string {
+    return this.message;
   }
 }
