@@ -43,6 +43,13 @@ export default class TripService {
     if (!loggedUser.isFriendOf(user)) {
       return [];
     }
-    return this.findTripsByUser(user);
+    const trips = this.findTripsByUser(user);
+    return this.sortTripsByPopularityInDecendingOrder(trips);
+  }
+
+  private sortTripsByPopularityInDecendingOrder(trips: Trip[]): Trip[] {
+    return [...trips].sort((t1, t2) => {
+      return t1.popularity > t2.popularity ? -1 : 1;
+    });
   }
 }
