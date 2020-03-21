@@ -13,6 +13,10 @@ describe('TripService', () => {
     return service;
   }
 
+  function createTripServiceWithRandomLoggedUser(): TripService {
+    return createTripServiceWithLoggedUser(new User());
+  }
+
   describe('getTripsByUser', () => {
 
     it('should throw UserNotLoggedInError when use is not logged in', () => {
@@ -55,7 +59,7 @@ describe('TripService', () => {
     it('should log welcome message when getTripsByUser is called', () => {
       const logger = new MockLogger();
 
-      const service = createTripServiceWithLoggedUser(new User());
+      const service = createTripServiceWithRandomLoggedUser();
       service.setLogger(logger);
 
       service.getTripsByUser(new User());
