@@ -56,6 +56,30 @@ describe('TripService', () => {
       expect(gotTrips).toEqual(trips);
     });
 
+    it('should return trips ordered by popularity in decending order', () => {
+      const user = new User();
+
+      const loggedUser = new User();
+      user.addFriend(loggedUser);
+
+      const trips = [
+        new Trip(1),
+        new Trip(2),
+        new Trip(3),
+      ];
+      trips.forEach(t => user.addTrip(t));
+
+      const service = createTripServiceWithLoggedUser(loggedUser);
+
+      const gotTrips = service.getTripsByUser(user);
+
+      expect(gotTrips).toEqual([
+        new Trip(3),
+        new Trip(2),
+        new Trip(1),
+      ]);
+    });
+
     it('should log welcome message when getTripsByUser is called', () => {
       const logger = new MockLogger();
 
