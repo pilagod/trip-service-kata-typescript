@@ -11,7 +11,31 @@ export default class TripService {
   private logger: Logger = new NullLogger();
 
   public getTripsByUser(user: User): Trip[] {
+    this.logWelcomeMessage();
+    return this.getTrips(user);
+  }
+
+  public setLogger(logger: Logger): void {
+    this.logger = logger;
+  }
+
+  /* protected */
+
+  protected getLoggedUser(): Nullable<User> {
+    return UserSession.getLoggedUser();
+  }
+
+  protected findTripsByUser(user: User): Trip[] {
+    return TripDAO.findTripsByUser(user);
+  }
+
+  /* private */
+
+  private logWelcomeMessage() {
     this.logger.log('Nice to meet you! Welcome to use getTripsByUser API.');
+  }
+
+  private getTrips(user: User): Trip[] {
     const loggedUser: User = this.getLoggedUser();
     if (loggedUser === null) {
       throw new UserNotLoggedInError();
@@ -20,17 +44,5 @@ export default class TripService {
       return [];
     }
     return this.findTripsByUser(user);
-  }
-
-  public setLogger(logger: Logger): void {
-    this.logger = logger;
-  }
-
-  protected getLoggedUser(): Nullable<User> {
-    return UserSession.getLoggedUser();
-  }
-
-  protected findTripsByUser(user: User): Trip[] {
-    return TripDAO.findTripsByUser(user);
   }
 }
