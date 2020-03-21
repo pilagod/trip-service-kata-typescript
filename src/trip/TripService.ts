@@ -1,3 +1,4 @@
+import { Nullable } from '@type';
 import { UserNotLoggedInError } from '@error';
 import User from '@user/User';
 import UserSession from '@user/UserSession';
@@ -8,7 +9,7 @@ export default class TripService {
 
   public getTripsByUser(user: User): Trip[] {
     let tripList: Trip[] = [];
-    const loggedUser: User = UserSession.getLoggedUser();
+    const loggedUser: User = this.getLoggedUser();
     let isFriend: boolean = false;
     if (loggedUser != null) {
       for (const friend of user.getFriends()) {
@@ -23,5 +24,9 @@ export default class TripService {
       return tripList;
     }
     throw new UserNotLoggedInError();
+  }
+
+  protected getLoggedUser(): Nullable<User> {
+    return UserSession.getLoggedUser();
   }
 }

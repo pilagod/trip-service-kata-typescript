@@ -25,7 +25,6 @@ class TripServiceUnderTest extends TripService {
     this.user = user;
   }
 
-  // expect there is a method called getLoggedUser on TripService that can be overridden
   protected getLoggedUser(): Nullable<User> {
     return this.user;
   }
