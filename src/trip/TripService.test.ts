@@ -65,7 +65,6 @@ class TripServiceUnderTest extends TripService {
     return this.user;
   }
 
-  // expect there is a method called findTripsByUser on TripService that can be overridden
   protected findTripsByUser(user: User): Trip[] {
     return user.getTrips();
   }
