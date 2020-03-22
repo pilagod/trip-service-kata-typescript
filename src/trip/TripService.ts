@@ -2,13 +2,17 @@ import { Nullable } from '@type';
 import { UserNotLoggedInError } from '@error';
 import Logger, { NullLogger } from '@trip/Logger';
 import Trip from '@trip/Trip';
-import TripDAO from '@trip/TripDAO';
+import TripRepository from '@trip/TripRepository';
 import User from '@user/User';
 import UserSession from '@user/UserSession';
 
 export default class TripService {
 
   private logger: Logger = new NullLogger();
+
+  public constructor(
+    private tripRepository: TripRepository,
+  ) {}
 
   public getTripsByUser(user: User): Trip[] {
     this.logWelcomeMessage();
@@ -25,10 +29,6 @@ export default class TripService {
     return UserSession.getLoggedUser();
   }
 
-  protected findTripsByUser(user: User): Trip[] {
-    return TripDAO.findTripsByUser(user);
-  }
-
   /* private */
 
   private logWelcomeMessage() {
@@ -43,7 +43,7 @@ export default class TripService {
     if (!loggedUser.isFriendOf(user)) {
       return [];
     }
-    const trips = this.findTripsByUser(user);
+    const trips = this.tripRepository.findTripsByUser(user);
     return this.sortTripsByPopularityInDecendingOrder(trips);
   }
 
