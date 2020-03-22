@@ -51,30 +51,28 @@ describe('TripService', () => {
 
     it('should return trips when logged user is friend of given user', () => {
       const user = new User();
-      const trips = [new Trip(), new Trip()];
-      trips.forEach(t => user.addTrip(t));
+      user.addTrips([new Trip(), new Trip()]);
 
       const service = createTripServiceWithLoggedUserBeingFriendOf(user);
 
-      const gotTrips = service.getTripsByUser(user);
+      const trips = service.getTripsByUser(user);
 
-      expect(gotTrips).toEqual(trips);
+      expect(trips).toEqual(user.getTrips());
     });
 
     it('should return trips ordered by popularity in decending order', () => {
       const user = new User();
-      const trips = [
+      user.addTrips([
         new Trip(1),
         new Trip(2),
         new Trip(3),
-      ];
-      trips.forEach(t => user.addTrip(t));
+      ]);
 
       const service = createTripServiceWithLoggedUserBeingFriendOf(user);
 
-      const gotTrips = service.getTripsByUser(user);
+      const trips = service.getTripsByUser(user);
 
-      expect(gotTrips).toEqual([
+      expect(trips).toEqual([
         new Trip(3),
         new Trip(2),
         new Trip(1),
@@ -106,10 +104,6 @@ class TripServiceUnderTest extends TripService {
 
   protected getLoggedUser(): Nullable<User> {
     return this.user;
-  }
-
-  protected findTripsByUser(user: User): Trip[] {
-    return user.getTrips();
   }
 }
 

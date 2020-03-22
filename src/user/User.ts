@@ -16,6 +16,10 @@ export default class User {
     this.trips.push(trip);
   }
 
+  public addTrips(trips: Trip[]): void {
+    this.trips.push(...trips);
+  }
+
   public getTrips(): Trip[] {
     return this.trips;
   }
