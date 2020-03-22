@@ -2,13 +2,14 @@ import { Nullable } from '@type';
 import { UserNotLoggedInError } from '@error';
 import Logger from '@trip/Logger';
 import Trip from '@trip/Trip';
+import TripRepository from '@trip/TripRepository';
 import TripService from '@trip/TripService';
 import User from '@user/User';
 
 describe('TripService', () => {
 
   function createTripServiceWithLoggedUser(user: Nullable<User>): TripService {
-    const service = new TripServiceUnderTest();
+    const service = new TripServiceUnderTest(new MockTripRepository());
     service.givenLoggedUser(user);
     return service;
   }
@@ -121,5 +122,11 @@ class MockLogger implements Logger {
 
   public getMessage(): string {
     return this.message;
+  }
+}
+
+class MockTripRepository implements TripRepository {
+  public findTripsByUser(user: User): Trip[] {
+    return user.getTrips();
   }
 }
